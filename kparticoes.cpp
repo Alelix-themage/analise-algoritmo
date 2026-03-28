@@ -1,8 +1,8 @@
 /*========================================================================================================
     Alessandro Luis Pinheiro da Rocha Junior                Código: 2230837
-    Bruno Saraiva                                           Código:
-    Mateus de Castro                                        Código:
-    Sergio Luis Filippin                                    Código:
+    Bruno Saraiva                                           Código: 2185932
+    Mateus de Castro                                        Código: 2200040
+    Sergio Luis Filippin                                    Código: 2259500
 =========================================================================================================*/
 
 
@@ -40,6 +40,27 @@ bool kparticoes(vector<int> &V, const int  &soma_v, const int &k_part, vector<ve
     }
 
     //preciso dividir os elementos em subconjuntos, e os elementos iguais devem ficar em conjuntos diferentes
+
+    // a partir daqui (SÉRGIO)
+
+    for (int k= 0; k < k_part; k++){ // tenta alocar o v[index] em cada subconjunto
+
+        if (somas_subconj[k] + V[index] > soma_result) continue; // se a soma do subconjunto ultrapassar a soma_result, pula para o próximo subconjunto
+        
+        if ( k > 0 && subconjuntos[k].empty()&& subconjuntos[k-1].empty()) continue; // evita alocar subconjutos vazios iguais
+
+        subconjuntos[k].push_back(V[index]);
+        somas_subconj[k] +=V[index]; 
+
+        kparticoes(V, soma_v, k_part, subconjuntos, somas_subconj, index + 1); // recursão para o próximo elemento  
+
+        subconjuntos[k].pop_back(); // remove o elemento alocado
+        somas_subconj[k] -= V[index]; 
+    }
+
+    return false;
+
+    // até aqui (SÉRGIO)
 }
 
 
