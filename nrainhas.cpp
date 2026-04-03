@@ -1,3 +1,10 @@
+/*========================================================================================================
+    Alessandro Luis Pinheiro da Rocha Junior                Código: 2230837
+    Bruno Saraiva                                           Código: 2185932
+    Mateus de Castro                                        Código: 2200040
+    Sergio Luis Filippin                                    Código: 2259500
+=========================================================================================================*/
+
 #include <chrono>
 #include <iostream>
 #include <limits>

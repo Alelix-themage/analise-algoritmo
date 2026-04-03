@@ -12,15 +12,18 @@
 
 using namespace std;
 
-bool kparticoes(vector<int> &V, const int  &soma_v, const int &k_part, vector<vector<int>> &subconjuntos, vector<int> &somas_subconj, int index){
+bool kparticoes(vector<int> &V, const int  &soma_v, const int &k_part, vector<vector<int>> &subconjuntos, vector<int> &somas_subconj, int index, int &count){
     /*=================================================================================
         Divide o vetor resultante em subvetores, baseado no número de partições k passado
         @args: V (vetor), soma_v (soma do vetor V), k_part (n de partições k)
         subconjuntos (armazena os vetores particionados), somas_subconj
         index (elemento a ser alocacado)
+
+        Complexidade: O(k^n)
+        Para cada um dos n elementos, o algoritmo tenta k subconjuntos possíveis.
+
     ==================================================================================*/
     int soma_result = 0;
-    vector<int> n_usados; // armazena os números já usados
     
     
     //Soma a ser conquistada por cada subconjunto
@@ -36,23 +39,36 @@ bool kparticoes(vector<int> &V, const int  &soma_v, const int &k_part, vector<ve
         for(int i = 0; i < k_part; i++){
             if(somas_subconj[i] != soma_result) return false;
         }
+
+        count ++;
+        cout << "\nSolução encontrada: " << endl;
+        for(int i = 0; i < k_part; i++){
+            cout << "S" << i+1 << " = { ";
+            for(int num : subconjuntos[i]){
+                cout << num << " ";
+            }
+            cout << "}\n";
+        }
+
         return true;
     }
-
-    //preciso dividir os elementos em subconjuntos, e os elementos iguais devem ficar em conjuntos diferentes
-
-    // a partir daqui (SÉRGIO)
-
-    for (int k= 0; k < k_part; k++){ // tenta alocar o v[index] em cada subconjunto
-
-        if (somas_subconj[k] + V[index] > soma_result) continue; // se a soma do subconjunto ultrapassar a soma_result, pula para o próximo subconjunto
+    
+    // tenta alocar o v[index] em cada subconjunto
+    for (int k= 0; k < k_part; k++){
         
-        if ( k > 0 && subconjuntos[k].empty()&& subconjuntos[k-1].empty()) continue; // evita alocar subconjutos vazios iguais
+        // se a soma do subconjunto ultrapassar a soma_result, pula para o próximo subconjunto
+        if (somas_subconj[k] + V[index] > soma_result) continue; 
+        
+        // evita explorar subconjuntos com mesma soma parcial (simetria)
+        if (k > 0 && somas_subconj[k] == somas_subconj[k-1]) continue;
 
         subconjuntos[k].push_back(V[index]);
         somas_subconj[k] +=V[index]; 
+        
+        // próximo elemento  
+       kparticoes(V, soma_v, k_part, subconjuntos, somas_subconj, index + 1, count);
 
-        kparticoes(V, soma_v, k_part, subconjuntos, somas_subconj, index + 1); // recursão para o próximo elemento  
+        
 
         subconjuntos[k].pop_back(); // remove o elemento alocado
         somas_subconj[k] -= V[index]; 
@@ -60,14 +76,15 @@ bool kparticoes(vector<int> &V, const int  &soma_v, const int &k_part, vector<ve
 
     return false;
 
-    // até aqui (SÉRGIO)
 }
 
 
 int main(){
-    vector<int>  V = {7, 3, 5, 12, 2, 1, 5, 3, 8, 4, 6, 4 };
+    vector<int>  V = {7, 3, 5, 12, 2, 1, 5, 3, 8, 4, 6, 4};
     int soma_v = 0;// tamanho V
-    int k_part = 2; // k partições
+    int k_part = 5;// k partições
+    int count  = 0;// contador de soluções 
+
     vector<int> somas_subconj(k_part, 0); //soma dos suconjuntos;
     vector<vector<int>> subconjuntos(k_part); //subconjuntos do vetor V
 
@@ -84,8 +101,12 @@ int main(){
 
     cout << "SomaTotal de V: " <<  soma_v << endl;
 
-    kparticoes(V, soma_v, k_part, subconjuntos, somas_subconj, 0);
+    kparticoes(V, soma_v, k_part, subconjuntos, somas_subconj, 0, count);
 
-    return 0;
+    if(count == 0)
+        cout << "\nNenhuma solução encontrada.\n";
+
+    cout << "\nNumero total de soluções encontradas: " << count << endl;
+        return 0;
 
 }
