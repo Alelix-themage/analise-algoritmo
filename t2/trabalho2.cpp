@@ -17,7 +17,10 @@
 
 using namespace std;
 
-// Executa a busca em largura usando fila e retorna a ordem de visita.
+    /* Executa a busca em largura usando fila e retorna a ordem de visita.
+        utilizando uma fila para visitar primeiro os vertices mais proximos dos vertices originais.
+        Sendo assim cada vertice fica marcado como visitado no momento em que ele entra na fila evitando duplicidade.
+    */
 vector<char> buscaLargura(const ListaAdjacencia &grafo, char inicio) {
     vector<char> ordem;
     map<char, bool> visitado;
@@ -35,6 +38,10 @@ vector<char> buscaLargura(const ListaAdjacencia &grafo, char inicio) {
         fila.pop();
         ordem.push_back(atual);
 
+        /* Percorre todos os vizinhos do vertice atual.
+            A ordem de visita vai depender da ordem do armazenamento na lista de adjacencia.
+        */
+
         for (auto vizinho : grafo.at(atual)) {
             char destino = vizinho.first;
 
@@ -48,7 +55,8 @@ vector<char> buscaLargura(const ListaAdjacencia &grafo, char inicio) {
     return ordem;
 }
 
-// Visita os vertices de forma recursiva para a busca em profundidade.
+        //Visita os vertices de forma recursiva para  busca em profundidade
+
 void dfsRecursiva(const ListaAdjacencia &grafo, char atual, map<char, bool> &visitado, vector<char> &ordem) {
     visitado[atual] = true;
     ordem.push_back(atual);
@@ -62,7 +70,10 @@ void dfsRecursiva(const ListaAdjacencia &grafo, char atual, map<char, bool> &vis
     }
 }
 
-// Executa a busca em profundidade a partir do vertice inicial.
+    /*  Executa a busca em profundidade (DFS) a partir do vertice inicial.
+        Realiza a visita marcando o visitado e percorre recursivamente para o vizinho ainda nao visitado.
+        A complexiade da busca em profundidade é dada como O( v + e).
+        */
 vector<char> buscaProfundidade(const ListaAdjacencia &grafo, char inicio) {
     vector<char> ordem;
     map<char, bool> visitado;
@@ -75,8 +86,10 @@ vector<char> buscaProfundidade(const ListaAdjacencia &grafo, char inicio) {
     return ordem;
 }
 
-// Calcula o menor caminho em um grafo ponderado usando o algoritmo de Dijkstra.
-// Complexidade: O((V + E) log V), usando fila de prioridade.
+    /* Faz o calculo do menor caminho em um grafo ponderado utilizando o algoritmo de Dijkstra.
+        o algoritmo mantem a melhor/menor distancia conhecida ate cada vertice e utiliza uma fila
+        de proiridade para sua expansao do vertice com o menor custo possivel.
+    */
 pair<int, vector<char>> dijkstra(const ListaAdjacencia &grafo, char origem, char destino) {
     const int infinito = numeric_limits<int>::max();
     map<char, int> distancia;
